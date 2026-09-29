@@ -7,6 +7,11 @@ networking gear (Cisco, Mikrotik, Ubiquiti, HPE), POS hardware, servers, fiber a
 It talks to the **public WooCommerce Store API** (`/wp-json/wc/store/v1`), so it needs **no
 credentials** and can never modify the store.
 
+Built on the v2 MCP TypeScript SDK — `@modelcontextprotocol/server` 2.2.0 (with
+`@modelcontextprotocol/client` 2.2.0 driving the tests) and Zod 4. Tool inputs are declared as
+Standard Schema objects (`z.object({ ... })`), the non-deprecated form; the v1 packages
+(`@modelcontextprotocol/sdk`) and raw-shape `inputSchema` records are not used.
+
 ## Tools
 
 | Tool | Purpose |
@@ -73,7 +78,8 @@ npm install
 npm run build
 ```
 
-Requires Node 18+ (developed on Node 22).
+Requires Node 20+ (developed on Node 22) — the v2 MCP SDK packages used here declare
+`engines: node >=20`.
 
 > If your shell exports `NODE_ENV=production`, npm skips dev dependencies and the build will fail.
 > Install with `npm install --include=dev`.

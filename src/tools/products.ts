@@ -1,5 +1,5 @@
 import { z } from "zod";
-import type { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
+import type { McpServer } from "@modelcontextprotocol/server";
 import type { StoreApiClient } from "../client.js";
 import { describeProduct, summarizeProduct, truncate, type StoreProduct } from "../format.js";
 import {
@@ -40,7 +40,7 @@ export function registerProductTools(server: McpServer, client: StoreApiClient):
         "Supports free-text search plus filters for category, tag, SKU, price range, sale status, stock status and rating. " +
         "Results are paginated (per_page max 100) and returned newest-first by default with formatted IDR prices.",
       annotations: READ_ONLY,
-      inputSchema: {
+      inputSchema: z.object({
         search: z
           .string()
           .trim()
@@ -75,7 +75,7 @@ export function registerProductTools(server: McpServer, client: StoreApiClient):
         exclude: z.array(z.number().int().positive()).optional().describe("Exclude these product IDs from results."),
         page: z.number().int().min(1).optional().describe("1-based page number. Defaults to 1."),
         per_page: z.number().int().min(1).max(100).optional().describe("Results per page, 1-100. Defaults to 20."),
-      },
+      }),
     },
     (args) => runTool(async () => {
       const page = args.page ?? 1;
@@ -134,7 +134,7 @@ export function registerProductTools(server: McpServer, client: StoreApiClient):
         "Fetch one product by ID or slug and return its full detail: formatted IDR price, plain-text description, " +
         "brand, categories, tags, attributes, gallery image URLs, dimensions/weight and order quantity limits.",
       annotations: READ_ONLY,
-      inputSchema: {
+      inputSchema: z.object({
         id: z.number().int().positive().optional().describe("Product ID. Provide exactly one of id or slug."),
         slug: z
           .string()
@@ -142,7 +142,7 @@ export function registerProductTools(server: McpServer, client: StoreApiClient):
           .min(1)
           .optional()
           .describe('Product slug, e.g. "epson-tm-t82x-pos-printer". Provide exactly one of id or slug.'),
-      },
+      }),
     },
     (args) => runTool(async () => {
       if ((args.id === undefined) === (args.slug === undefined)) {
@@ -171,14 +171,14 @@ export function registerProductTools(server: McpServer, client: StoreApiClient):
         "List customer reviews, optionally scoped to a product or category. Note: this store currently has no published reviews, " +
         "so the result is normally an empty array.",
       annotations: READ_ONLY,
-      inputSchema: {
+      inputSchema: z.object({
         product_id: z.number().int().positive().optional().describe("Only reviews for this product ID."),
         category_id: z.number().int().positive().optional().describe("Only reviews for products in this category."),
         orderby: z.enum(REVIEW_ORDER_BY).optional().describe("Sort field. Defaults to date."),
         order: z.enum(ORDER).optional().describe("Sort direction. Defaults to desc."),
         page: z.number().int().min(1).optional().describe("1-based page number. Defaults to 1."),
         per_page: z.number().int().min(1).max(100).optional().describe("Results per page, 1-100. Defaults to 20."),
-      },
+      }),
     },
     (args) => runTool(async () => {
       const page = args.page ?? 1;

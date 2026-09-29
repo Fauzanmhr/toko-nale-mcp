@@ -1,5 +1,5 @@
 import { z } from "zod";
-import type { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
+import type { McpServer } from "@modelcontextprotocol/server";
 import type { StoreApiClient } from "../client.js";
 import { summarizeTerm, type StoreTerm } from "../format.js";
 import {
@@ -33,7 +33,7 @@ export function registerCatalogTools(server: McpServer, client: StoreApiClient):
         "List the product category tree. Each category includes its ID (use it as the `category` filter of list_products), " +
         "parent ID for walking the hierarchy, and product count. This store's tree is broad (Routers, Switches, Firewalls, Cables, Servers...).",
       annotations: READ_ONLY,
-      inputSchema: {
+      inputSchema: z.object({
         search: z
           .string()
           .trim()
@@ -51,7 +51,7 @@ export function registerCatalogTools(server: McpServer, client: StoreApiClient):
         order: z.enum(ORDER).optional().describe("Sort direction. Defaults to asc."),
         page: z.number().int().min(1).optional().describe("1-based page number. Defaults to 1."),
         per_page: z.number().int().min(1).max(100).optional().describe("Results per page, 1-100. Defaults to 50."),
-      },
+      }),
     },
     (args) => runTool(async () => {
       const page = args.page ?? 1;
@@ -94,14 +94,14 @@ export function registerCatalogTools(server: McpServer, client: StoreApiClient):
       description:
         "List product tags with their slugs (usable as the `tag` filter of list_products) and product counts.",
       annotations: READ_ONLY,
-      inputSchema: {
+      inputSchema: z.object({
         search: z.string().trim().min(1).optional().describe('Free-text search over tag names, e.g. "cisco".'),
         hide_empty: z.boolean().optional().describe("Set true to exclude tags with no products."),
         orderby: z.enum(TERM_ORDER_BY).optional().describe("Sort field. Defaults to name."),
         order: z.enum(ORDER).optional().describe("Sort direction. Defaults to asc."),
         page: z.number().int().min(1).optional().describe("1-based page number. Defaults to 1."),
         per_page: z.number().int().min(1).max(100).optional().describe("Results per page, 1-100. Defaults to 50."),
-      },
+      }),
     },
     (args) => runTool(async () => {
       const page = args.page ?? 1;
@@ -165,7 +165,7 @@ export function registerCatalogTools(server: McpServer, client: StoreApiClient):
         "Get attribute ids from list_attributes. Note: filtering list_products by attribute is not supported by this store's API, " +
         "so use a term name as a `search` value instead.",
       annotations: READ_ONLY,
-      inputSchema: {
+      inputSchema: z.object({
         attribute_id: z
           .number()
           .int()
@@ -177,7 +177,7 @@ export function registerCatalogTools(server: McpServer, client: StoreApiClient):
         order: z.enum(ORDER).optional().describe("Sort direction. Defaults to asc."),
         page: z.number().int().min(1).optional().describe("1-based page number. Defaults to 1."),
         per_page: z.number().int().min(1).max(100).optional().describe("Results per page, 1-100. Defaults to 50."),
-      },
+      }),
     },
     (args) => runTool(async () => {
       const page = args.page ?? 1;
