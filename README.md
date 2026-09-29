@@ -4,6 +4,9 @@ A read-only [MCP](https://modelcontextprotocol.io) server for browsing the produ
 Toko Nale store (**https://toko.nale.co.id**) — a WooCommerce shop with ~29,700 products covering
 networking gear (Cisco, Mikrotik, Ubiquiti, HPE), POS hardware, servers, fiber and cabling.
 
+> **Unofficial project.** This is an independent, third-party tool. It is not affiliated with,
+> endorsed by, or supported by Toko Nale or WooCommerce. See [Disclaimer](#disclaimer).
+
 It talks to the **public WooCommerce Store API** (`/wp-json/wc/store/v1`), so it needs **no
 credentials** and can never modify the store.
 
@@ -106,6 +109,35 @@ Requires Node 20+ (developed on Node 22) — the v2 MCP SDK packages used here d
 
 Run it straight from the sources during development with `npm run dev` (tsx), or as a server binary
 via `npx toko-nale-mcp` once linked.
+
+## Disclaimer
+
+**This project is unofficial.** It is an independent, third-party client, written without any
+involvement from the parties below. It is not affiliated with, endorsed by, sponsored by, or
+supported by:
+
+- **Toko Nale** (https://toko.nale.co.id) — the store whose catalog it browses, or
+- **Automattic / WooCommerce** — the platform that store runs on.
+
+Please keep the following in mind:
+
+- **Read-only by design.** It calls only the publicly accessible WooCommerce Store API
+  (`/wp-json/wc/store/v1`). It sends no write requests, needs no credentials, and cannot place
+  orders or modify the store in any way.
+- **The data belongs to the store.** Product names, prices, images, descriptions and all other
+  catalog content are Toko Nale's, and are reproduced here only as returned by their public API.
+- **It can be stale or wrong.** Prices, stock levels and availability are whatever the API returned
+  at request time and may change at any moment. Always confirm on the store's own website before
+  acting on anything — nothing returned by this server is a quote, an offer, or a purchasing
+  recommendation.
+- **Be considerate with requests.** The server is not tuned for heavy, automated bulk scraping.
+- **Trademarks.** "WooCommerce", "WordPress", "Cisco", "Mikrotik", "Ubiquiti", "HPE", "Epson" and any
+  other product, brand or company names are the property of their respective owners and appear here
+  for identification only.
+- **No warranty.** Provided "as is", without warranty of any kind, express or implied. Use at your
+  own risk.
+
+If you are Toko Nale and would like this project changed or taken down, please open an issue.
 
 ## Development
 
